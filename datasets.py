@@ -40,6 +40,7 @@ class ImageTransform():
     def __init__(self, resize):
         self.data_transform = {
             'train': transforms.Compose([
+                transforms.RandomHorizontalFlip(),
                 transforms.ToTensor(),
                 transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
             ]),
@@ -109,4 +110,7 @@ class TripletDataset(Dataset):
         positive = self.transform(Image.open(positive_path), self.phase)
         negative = self.transform(Image.open(negative_path), self.phase)
 
-        return anchor, positive, negative, anchor_label
+        if self.phase == 'train':
+            return anchor, positive, negative
+        else:
+            return anchor, anchor_label
